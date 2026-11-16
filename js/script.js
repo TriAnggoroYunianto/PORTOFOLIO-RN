@@ -1,93 +1,233 @@
-// ==================== Theme Toggle ====================
+/* ==================== FLOATING FUTURISTIC DEVELOPER PROFILE CARD PORTFOLIO ==================== */
+
+// ==================== LOADING SCREEN ==================== 
+window.addEventListener('load', () => {
+    const loadingScreen = document.querySelector('.loading-screen');
+    setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }, 1200);
+});
+
+// ==================== MUSIC PLAYER ==================== 
+const musicPlayerBtn = document.getElementById('musicPlayerBtn');
+const backgroundMusic = document.getElementById('backgroundMusic');
+let isPlaying = false;
+
+if (musicPlayerBtn && backgroundMusic) {
+    // Set initial state dari audio element
+    isPlaying = !backgroundMusic.paused;
+    
+    // Autoplay akan trigger 'play' event automatically dari HTML autoplay attribute
+    // Tapi kita pastikan state sinkron
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            // Pastikan autoplay berhasil, kalau tidak bisa due to browser policy
+            if (backgroundMusic.paused) {
+                console.log('Autoplay blocked, waiting for user interaction');
+                isPlaying = false;
+            } else {
+                isPlaying = true;
+            }
+            updateMusicPlayerUI();
+        }, 500);
+    });
+
+    musicPlayerBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            backgroundMusic.pause();
+            isPlaying = false;
+        } else {
+            backgroundMusic.play().catch(error => {
+                console.error('Error playing music:', error);
+            });
+            isPlaying = true;
+        }
+        updateMusicPlayerUI();
+    });
+
+    // Update UI when music ends
+    backgroundMusic.addEventListener('ended', () => {
+        isPlaying = false;
+        updateMusicPlayerUI();
+    });
+
+    // Update UI when music is playing
+    backgroundMusic.addEventListener('play', () => {
+        isPlaying = true;
+        updateMusicPlayerUI();
+    });
+
+    // Update UI when music is paused
+    backgroundMusic.addEventListener('pause', () => {
+        isPlaying = false;
+        updateMusicPlayerUI();
+    });
+
+    // Handle audio errors
+    backgroundMusic.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        isPlaying = false;
+        updateMusicPlayerUI();
+    });
+
+    function updateMusicPlayerUI() {
+        const iconPlay = musicPlayerBtn.querySelector('.icon-play');
+        const iconPause = musicPlayerBtn.querySelector('.icon-pause');
+        
+        if (isPlaying) {
+            musicPlayerBtn.classList.add('playing');
+            iconPlay.style.display = 'none';
+            iconPause.style.display = 'block';
+        } else {
+            musicPlayerBtn.classList.remove('playing');
+            iconPlay.style.display = 'block';
+            iconPause.style.display = 'none';
+        }
+    }
+}
+
+// ==================== SCROLL PROGRESS BAR ==================== 
+function updateScrollProgress() {
+    const scrollProgress = document.querySelector('.scroll-progress');
+    const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = (window.scrollY / windowHeight) * 100;
+    scrollProgress.style.width = `${Math.min(scrolled, 100)}%`;
+}
+
+window.addEventListener('scroll', updateScrollProgress);
+
+// ==================== THEME TOGGLE ==================== 
 const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
 
-// Check for saved theme preference or default to dark mode
-const currentTheme = localStorage.getItem('theme') || 'dark';
-if (currentTheme === 'light') {
-    body.classList.add('light-mode');
-}
+(function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+        body.classList.add('light-mode');
+    }
+})();
 
 themeToggle.addEventListener('click', () => {
+    body.style.transition = 'background-color 0.25s ease, color 0.25s ease';
     body.classList.toggle('light-mode');
     
-    // Save theme preference
     const theme = body.classList.contains('light-mode') ? 'light' : 'dark';
     localStorage.setItem('theme', theme);
+    
+    setTimeout(() => body.style.transition = '', 300);
 });
 
-// ==================== Card Flip Effect (Improved) ====================
-const cardFlip = document.querySelector('.card-flip');
+// ==================== TYPEWRITER EFFECT ==================== 
+const typingText = document.getElementById('typingText');
+const roles = [
+    'Creative Developer',
+    'Frontend Developer',
+    'UI/UX Enthusiast',
+    '3D Web Designer'
+];
 
-if (cardFlip) {
-    let isFlipped = false;
-    let isAnimating = false;
+let roleIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingSpeed = 150;
 
-    // Touch support for mobile devices
-    cardFlip.addEventListener('touchstart', (e) => {
-        if (isAnimating) return;
-        
-        isAnimating = true;
-        isFlipped = !isFlipped;
-        
-        if (isFlipped) {
-            cardFlip.style.transform = 'rotateY(180deg) scale(1.02)';
-        } else {
-            cardFlip.style.transform = 'rotateY(0deg) scale(1)';
-        }
-        
-        // Reset animation flag after transition
-        setTimeout(() => {
-            isAnimating = false;
-        }, 800);
-    });
-
-    // Prevent default touch behavior
-    cardFlip.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-    }, { passive: false });
+function typeWriter() {
+    const currentRole = roles[roleIndex];
+    
+    if (isDeleting) {
+        typingText.textContent = currentRole.substring(0, charIndex - 1);
+        charIndex--;
+        typingSpeed = 75;
+    } else {
+        typingText.textContent = currentRole.substring(0, charIndex + 1);
+        charIndex++;
+        typingSpeed = 150;
+    }
+    
+    if (!isDeleting && charIndex === currentRole.length) {
+        setTimeout(() => isDeleting = true, 2000);
+        typingSpeed = 2000;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        typingSpeed = 500;
+    }
+    
+    setTimeout(typeWriter, typingSpeed);
 }
 
-// ==================== Mobile Menu Toggle ====================
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
+setTimeout(typeWriter, 1000);
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+// ==================== FLOATING DEVELOPER CARD 3D TILT ==================== 
+const developerCard = document.querySelector('.developer-card');
 
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-    });
-});
-
-// ==================== Navbar Scroll Effect ====================
-const navbar = document.querySelector('.navbar');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+if (developerCard) {
+    const cardContainer = document.querySelector('.developer-card-container');
+    let bounds;
+    
+    function updateBounds() {
+        bounds = cardContainer.getBoundingClientRect();
     }
-});
+    
+    updateBounds();
+    window.addEventListener('resize', updateBounds);
+    
+    // Mouse move for 3D tilt effect
+    cardContainer.addEventListener('mousemove', (e) => {
+        if (!bounds) return;
+        
+        // Calculate mouse position relative to card center (-1 to 1)
+        const mouseX = e.clientX - bounds.left;
+        const mouseY = e.clientY - bounds.top;
+        const centerX = bounds.width / 2;
+        const centerY = bounds.height / 2;
+        
+        const percentX = (mouseX - centerX) / centerX;
+        const percentY = (mouseY - centerY) / centerY;
+        
+        // Apply subtle 3D rotation (max 8 degrees - reduced from 12)
+        const rotateY = percentX * 8;
+        const rotateX = -percentY * 8;
+        
+        developerCard.style.transform = `
+            perspective(1200px)
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+            translateZ(15px)
+        `;
+    });
+    
+    // Reset on mouse leave
+    cardContainer.addEventListener('mouseleave', () => {
+        developerCard.style.transform = `
+            perspective(1000px)
+            rotateX(0deg)
+            rotateY(0deg)
+            translateZ(0px)
+        `;
+    });
+    
+    console.log('✨ Floating Developer Card initialized');
+}
 
-// ==================== Active Navigation Link ====================
+// ==================== FLOATING NAVIGATION ==================== 
+const navLinks = document.querySelectorAll('.nav-link-floating');
 const sections = document.querySelectorAll('section');
 
 function setActiveLink() {
-    const scrollPosition = window.scrollY + 100;
+    const scrollPos = window.scrollY + 100;
 
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.offsetHeight;
         const sectionId = section.getAttribute('id');
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
             navLinks.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${sectionId}`) {
@@ -100,7 +240,6 @@ function setActiveLink() {
 
 window.addEventListener('scroll', setActiveLink);
 
-// ==================== Smooth Scroll ====================
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -108,7 +247,7 @@ navLinks.forEach(link => {
         const targetSection = document.querySelector(targetId);
         
         if (targetSection) {
-            const offsetTop = targetSection.offsetTop - 70;
+            const offsetTop = targetSection.offsetTop - 80;
             window.scrollTo({
                 top: offsetTop,
                 behavior: 'smooth'
@@ -117,426 +256,102 @@ navLinks.forEach(link => {
     });
 });
 
-// ==================== Fade In Animation on Scroll ====================
+// ==================== HAMBURGER MENU ==================== 
+const hamburger = document.getElementById('hamburgerMenu');
+const navMenuFloating = document.querySelector('.nav-menu-floating');
+
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        navMenuFloating.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+    
+    // Close menu when link is clicked
+    const navLinksHamburger = navMenuFloating?.querySelectorAll('.nav-link-floating');
+    if (navLinksHamburger) {
+        navLinksHamburger.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenuFloating.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
+}
+
+// ==================== SCROLL REVEAL ==================== 
 const observerOptions = {
     threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -50px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
         }
     });
 }, observerOptions);
 
-// Add fade-in class to elements
 const fadeElements = document.querySelectorAll('.org-card, .project-card, .about-content, .contact-content');
 fadeElements.forEach(el => {
-    el.classList.add('fade-in');
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'all 0.6s ease-out';
     observer.observe(el);
 });
 
-// ==================== Form Submission ====================
+// ==================== FORM SUBMISSION ==================== 
 const contactForm = document.querySelector('.contact-form');
 
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // Get form values
-        const formData = new FormData(contactForm);
+        const submitBtn = contactForm.querySelector('.btn');
+        const originalText = submitBtn.textContent;
         
-        // Show success message (you can customize this)
-        alert('Thank you for your message! I will get back to you soon.');
+        submitBtn.textContent = 'Mengirim...';
+        submitBtn.style.pointerEvents = 'none';
         
-        // Reset form
-        contactForm.reset();
-        
-        // In a real application, you would send the data to a server here
-        // Example:
-        // fetch('/api/contact', {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log('Success:', data);
-        // })
-        // .catch(error => {
-        //     console.error('Error:', error);
-        // });
-    });
-}
-
-// ==================== Mouse Parallax Effect ====================
-const hero = document.querySelector('.hero');
-const floatingCard = document.querySelector('.floating-card');
-
-if (hero && floatingCard) {
-    hero.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
-        
-        const moveX = (mouseX - 0.5) * 30;
-        const moveY = (mouseY - 0.5) * 30;
-        
-        floatingCard.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
-}
-
-// ==================== Scroll Progress Indicator ====================
-function updateScrollProgress() {
-    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (window.scrollY / windowHeight) * 100;
-    
-    let progressBar = document.querySelector('.scroll-progress');
-    if (!progressBar) {
-        progressBar = document.createElement('div');
-        progressBar.className = 'scroll-progress';
-        progressBar.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #8B5CF6, #EC4899);
-            z-index: 9999;
-            transition: width 0.1s ease-out;
-        `;
-        document.body.appendChild(progressBar);
-    }
-    
-    progressBar.style.width = `${scrolled}%`;
-}
-
-window.addEventListener('scroll', updateScrollProgress);
-
-// ==================== Count Up Animation for Stats ====================
-function animateCount(element, target, duration = 2000) {
-    const start = 0;
-    const increment = target / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target + '+';
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current) + '+';
-        }
-    }, 16);
-}
-
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const statNumbers = entry.target.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                animateCount(stat, target);
-            });
-            statsObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
-
-const aboutStats = document.querySelector('.about-stats');
-if (aboutStats) {
-    statsObserver.observe(aboutStats);
-}
-
-// ==================== Project Card Tilt Effect ====================
-const projectCards = document.querySelectorAll('.project-card');
-
-projectCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-        
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
-    });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-    });
-});
-
-// ==================== Cursor Effect ====================
-const cursor = document.createElement('div');
-cursor.className = 'custom-cursor';
-cursor.style.cssText = `
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #8B5CF6;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.2s ease;
-    display: none;
-`;
-document.body.appendChild(cursor);
-
-// Only show custom cursor on larger screens
-if (window.innerWidth > 768) {
-    cursor.style.display = 'block';
-}
-
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX - 10 + 'px';
-    cursor.style.top = e.clientY - 10 + 'px';
-});
-
-// Cursor hover effects
-const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card');
-interactiveElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursor.style.transform = 'scale(1.5)';
-        cursor.style.borderColor = '#EC4899';
-    });
-    
-    el.addEventListener('mouseleave', () => {
-        cursor.style.transform = 'scale(1)';
-        cursor.style.borderColor = '#8B5CF6';
-    });
-});
-
-// ==================== Initialize ====================
-window.addEventListener('load', () => {
-    // Remove loading screen if exists
-    const loader = document.querySelector('.loader');
-    if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => loader.remove(), 500);
-    }
-    
-    // Set initial active link
-    setActiveLink();
-    
-    // Update scroll progress
-    updateScrollProgress();
-});
-
-// ==================== Console Message ====================
-console.log('%c👋 Welcome to my portfolio!', 'color: #8B5CF6; font-size: 20px; font-weight: bold;');
-console.log('%cInterested in the code? Check out the repository!', 'color: #EC4899; font-size: 14px;');
-
-// ==================== Loading Screen Animation ====================
-window.addEventListener('load', () => {
-    const loadingScreen = document.querySelector('.loading-screen');
-    if (loadingScreen) {
         setTimeout(() => {
-            loadingScreen.style.opacity = '0';
+            submitBtn.textContent = 'Terkirim! ✓';
+            submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
             setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+                submitBtn.textContent = originalText;
+                submitBtn.style.background = '';
+                submitBtn.style.pointerEvents = '';
+                contactForm.reset();
+            }, 2000);
         }, 1500);
-    }
-});
-
-// ==================== Canvas Particles System (Stars) ====================
-const particlesCanvas = document.querySelector('.particles-canvas');
-if (particlesCanvas) {
-    const ctx = particlesCanvas.getContext('2d');
-
-    // Set canvas size
-    function resizeCanvas() {
-        particlesCanvas.width = particlesCanvas.offsetWidth;
-        particlesCanvas.height = particlesCanvas.offsetHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Star particle system
-    const stars = [];
-    const starCount = 100; // Lebih banyak bintang tapi lebih ringan
-
-    class Star {
-        constructor() {
-            this.x = Math.random() * particlesCanvas.width;
-            this.y = Math.random() * particlesCanvas.height;
-            this.size = Math.random() * 2 + 0.5; // Bintang lebih kecil
-            this.opacity = Math.random();
-            this.twinkleSpeed = Math.random() * 0.02 + 0.01;
-            this.growing = Math.random() > 0.5;
-        }
-
-        update() {
-            // Twinkle effect (berkelap-kelip)
-            if (this.growing) {
-                this.opacity += this.twinkleSpeed;
-                if (this.opacity >= 1) {
-                    this.growing = false;
-                }
-            } else {
-                this.opacity -= this.twinkleSpeed;
-                if (this.opacity <= 0.1) {
-                    this.growing = true;
-                }
-            }
-        }
-
-        draw() {
-            // Bintang putih dengan gradient
-            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-            gradient.addColorStop(0.5, `rgba(168, 85, 247, ${this.opacity * 0.5})`);
-            gradient.addColorStop(1, `rgba(168, 85, 247, 0)`);
-            
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Tambahkan efek bintang 4 sudut (cross)
-            if (this.opacity > 0.7) {
-                ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity * 0.3})`;
-                ctx.lineWidth = 0.5;
-                ctx.beginPath();
-                ctx.moveTo(this.x - this.size * 2, this.y);
-                ctx.lineTo(this.x + this.size * 2, this.y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(this.x, this.y - this.size * 2);
-                ctx.lineTo(this.x, this.y + this.size * 2);
-                ctx.stroke();
-            }
-        }
-    }
-
-    // Create stars
-    for (let i = 0; i < starCount; i++) {
-        stars.push(new Star());
-    }
-
-    // Animation loop (lebih ringan, tanpa koneksi garis)
-    function animateStars() {
-        ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
-        
-        stars.forEach(star => {
-            star.update();
-            star.draw();
-        });
-
-        requestAnimationFrame(animateStars);
-    }
-    animateStars();
+    });
 }
 
-// ==================== Enhanced Scroll Animations ====================
-const scrollObserverOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
+// ==================== PARALLAX ==================== 
+let ticking = false;
 
-const scrollAnimationObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            entry.target.classList.add('animated');
-        }
-    });
-}, scrollObserverOptions);
-
-// Apply animations to elements
-document.querySelectorAll('.float-up, .slide-in-left, .slide-in-right').forEach(el => {
-    if (!el.classList.contains('animated')) {
-        el.style.opacity = '0';
-        if (el.classList.contains('float-up')) {
-            el.style.transform = 'translateY(50px)';
-        } else if (el.classList.contains('slide-in-left')) {
-            el.style.transform = 'translateX(-50px)';
-        } else if (el.classList.contains('slide-in-right')) {
-            el.style.transform = 'translateX(50px)';
-        }
-        scrollAnimationObserver.observe(el);
+function updateParallax() {
+    const scrolled = window.scrollY;
+    const gradientBg = document.querySelector('.gradient-bg');
+    
+    if (gradientBg && scrolled < window.innerHeight) {
+        gradientBg.style.transform = `translateY(${scrolled * 0.3}px)`;
     }
-});
-
-// ==================== Magnetic Button Effect ====================
-document.querySelectorAll('.btn, .cta-button').forEach(button => {
-    button.addEventListener('mousemove', (e) => {
-        const rect = button.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        
-        button.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
-    });
-
-    button.addEventListener('mouseleave', () => {
-        button.style.transform = 'translate(0, 0) scale(1)';
-    });
-});
-
-// ==================== Spotlight Cursor Effect ====================
-let mouseX = 0;
-let mouseY = 0;
-let isMouseMoving = false;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    isMouseMoving = true;
-});
-
-// ==================== Smooth Section Transitions ====================
-const allSections = document.querySelectorAll('section');
-allSections.forEach(section => {
-    section.style.transition = 'all 0.5s ease-in-out';
-});
-
-// ==================== Organization Card Hover Effects ====================
-const orgCards = document.querySelectorAll('.org-card');
-orgCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-15px) scale(1.03)';
-    });
     
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
+    ticking = false;
+}
 
-// ==================== Glowing Elements on Scroll ====================
-const glowElements = document.querySelectorAll('.glow-on-hover');
-glowElements.forEach(el => {
-    const glowObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.5)';
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    glowObserver.observe(el);
-});
-
-// ==================== Performance Optimization ====================
-// Debounce scroll events for better performance
-let scrollTimeout;
 window.addEventListener('scroll', () => {
-    if (scrollTimeout) {
-        window.cancelAnimationFrame(scrollTimeout);
+    if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
     }
-    scrollTimeout = window.requestAnimationFrame(() => {
-        // Scroll-based animations handled here
-    });
-}, { passive: true });
-
-// ==================== Initialize All Animations ====================
-document.addEventListener('DOMContentLoaded', () => {
-    // Add animation classes after DOM is ready
-    setTimeout(() => {
-        document.body.classList.add('animations-ready');
-    }, 100);
 });
+
+// ==================== INITIALIZE ==================== 
+setActiveLink();
+updateScrollProgress();
+
+console.log('%c✨ Floating Developer Card Portfolio', 'color: #06b6d4; font-size: 16px; font-weight: bold;');
+console.log('%c🎴 New Clean Design - No Lanyard System', 'color: #10b981; font-size: 12px;');

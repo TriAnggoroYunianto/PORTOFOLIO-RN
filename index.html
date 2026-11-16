@@ -3,92 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio Website - Showcasing Creative Work">
-    <title>Portfolio - Creative Designer & Developer</title>
+    <meta name="description" content="Tri Anggoro Yunianto - Portfolio Website | UI/UX Designer & Information Systems Student">
+    <title>Tri Anggoro Yunianto | Portfolio</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen">
         <div class="loader">
-            <div class="loader-circle"></div>
-            <div class="loader-text">Loading...</div>
+            <div class="loader-orb">
+                <div class="orb-ring orb-ring-1"></div>
+                <div class="orb-ring orb-ring-2"></div>
+                <div class="orb-core"></div>
+            </div>
+            <div class="loader-text">
+                <span class="loading-word">Loading</span>
+                <span class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <span class="logo-text">RN</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#organization" class="nav-link">Organization</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+    <!-- Floating Navigation -->
+    <nav class="navbar-floating">
+        <div class="nav-container">
+            <ul class="nav-menu-floating">
+                <li><a href="#home" class="nav-link-floating active">Home</a></li>
+                <li><a href="#about" class="nav-link-floating">About</a></li>
+                <li><a href="#organization" class="nav-link-floating">Organization</a></li>
+                <li><a href="#certificate" class="nav-link-floating">Certificate</a></li>
+                <li><a href="#projects" class="nav-link-floating">Projects</a></li>
+                <li><a href="#contact" class="nav-link-floating">Contact</a></li>
             </ul>
-            <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <span class="sun-icon">☀️</span>
+            <div class="nav-controls">
+                <button class="music-player-btn" id="musicPlayerBtn" aria-label="Toggle music">
+                    <svg class="icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    <svg class="icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"/>
+                        <rect x="14" y="4" width="4" height="16"/>
+                    </svg>
+                </button>
+                <button class="theme-toggle-floating" id="themeToggle" aria-label="Toggle theme">
+                    <span class="sun-icon">☀︎</span>
                     <span class="moon-icon">🌙</span>
                 </button>
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
+            <audio id="backgroundMusic" preload="auto" autoplay loop>
+                <source src="song/RewriteTheStar.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+        <div class="hamburger-floating" id="hamburgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - 3D ID Card Design -->
     <section id="home" class="hero">
-        <canvas id="particles" class="particles-canvas"></canvas>
-        <div class="gradient-bg"></div>
+        <!-- Modern Premium Background -->
+        <div class="hero-background">
+            <div class="bg-gradient-layer"></div>
+            <div class="bg-ambient-glow bg-glow-1"></div>
+            <div class="bg-ambient-glow bg-glow-2"></div>
+            <div class="bg-ambient-glow bg-glow-3"></div>
+            <div class="bg-vignette"></div>
+            <!-- Star Particles -->
+            <div class="stars-container">
+                <div class="stars-layer stars-layer-1"></div>
+                <div class="stars-layer stars-layer-2"></div>
+                <div class="stars-layer stars-layer-3"></div>
+            </div>
+        </div>
+        
         <div class="container hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    <span class="greeting">Hallo, saya</span>
-                    <span class="name">Tri Anggoro Yunianto</span>
-                </h1>
-                <p class="hero-subtitle"></p>
-                <p class="hero-description">
-                    Mahasiswa S1 Program Studi Sistem Informasi, Fakultas Ilmu Komputer, Universitas Pembangunan Nasional "Veteran" Jawa Timur. 
-                </p>
-                <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            <!-- Left Content -->
+            <div class="hero-left">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="welcome-text">Welcome to</span>
+                        <span class="portfolio-text">My Portfolio</span>
+                    </h1>
+                    
+                    <div class="hero-subtitle-wrapper">
+                        <span class="typing-prefix">I'm a </span>
+                        <span class="typing-text" id="typingText"></span>
+                        <span class="cursor">|</span>
+                    </div>
+                    
+                    <p class="hero-description">
+                        Mahasiswa S1 Program Studi Sistem Informasi yang passionate dalam UI/UX Design, Frontend Development, dan Web Technologies. Menciptakan pengalaman digital yang meaningful dan inovatif.
+                    </p>
+                    
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">
+                            <span>Lihat Projek</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M18 10L2 2L5 10L2 18L18 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Hubungi Saya</span>
+                        </a>
+                    </div>
+                    
+                    <div class="social-section">
+                        <span class="social-label">FIND ME</span>
+                        <div class="social-links-home">
+                            <a href="https://github.com/trianggoro" target="_blank" class="social-icon" aria-label="GitHub">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.instagram.com/_angrnnz/" target="_blank" class="social-icon" aria-label="Instagram">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-width="2"/>
+                                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" stroke-width="2"/>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+                            <a href="https://tiktok.com/@triangg_o" target="_blank" class="social-icon" aria-label="TikTok">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="hero-image">
-                <!-- Foto dipindahkan ke About Me section -->
-                <div class="floating-logos">
-                    <div class="logo-item logo-1">
-                        <img src="img/logosmahada.png" alt="Logo SMA Hada">
-                    </div>
-                    <div class="logo-item logo-2">
-                        <img src="img/logoupn.png" alt="Logo UPN">
-                    </div>
-                    <div class="logo-item logo-3">
-                        <img src="img/LogoVeteranEsport.png" alt="Logo Veteran Esport">
-                    </div>
-                    <div class="logo-item logo-4">
-                        <img src="img/logopolsis.png" alt="Logo Polsis">
-                    </div>
-                    <div class="logo-item logo-5">
-                        <img src="img/logokartar.png" alt="Logo Kartar">
+            
+            <!-- Right Content - Floating Developer Profile Card -->
+            <div class="hero-right">
+                <div class="developer-card-container">
+                    <!-- 3D Developer Profile Card -->
+                    <div class="developer-card" id="developerCard">
+                        <!-- Card Background Effects -->
+                        <div class="card-glow"></div>
+                        <div class="card-shine"></div>
+                        
+                        <!-- Card Content -->
+                        <div class="card-inner">
+                            <!-- Header Section -->
+                            <div class="card-header">
+                                <div class="dev-badge">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="16 18 22 12 16 6"></polyline>
+                                        <polyline points="8 6 2 12 8 18"></polyline>
+                                    </svg>
+                                    <span>DEVELOPER PROFILE</span>
+                                </div>
+                                <div class="card-id-number">#DEV-2024</div>
+                            </div>
+                            
+                            <!-- Photo Section -->
+                            <div class="card-photo-wrapper">
+                                <div class="photo-container">
+                                    <img src="img/fotokubaru.jpg" alt="Tri Anggoro Yunianto" class="profile-photo">
+                                    <div class="photo-ring"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Info Section -->
+                            <div class="card-info">
+                                <h2 class="dev-name">TRI ANGGORO YUNIANTO</h2>
+                                <p class="dev-title">Frontend Developer</p>
+                                
+                                <div class="dev-details">
+                                    <div class="detail-item">
+                                        <span class="detail-icon"> </span>
+                                        <span class="detail-text">UPN Veteran Jawa Timur</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon"> </span>
+                                        <span class="detail-text">Information Systems</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon"> </span>
+                                        <span class="detail-text">UI/UX Design</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Decorative Element -->
+                            <div class="card-accent"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         <div class="scroll-indicator">
             <span>Scroll Down</span>
             <div class="mouse"></div>
@@ -192,6 +309,35 @@
         </div>
     </section>
 
+    <!-- Certificate Section -->
+    <section id="certificate" class="certificate">
+        <div class="container">
+            <h2 class="section-title">Certificates</h2>
+            <div class="certificate-grid">
+                <div class="certificate-card">
+                    <div class="cert-icon">📜</div>
+                    <h3>Web Development Certificate</h3>
+                    <p class="cert-issuer">Issued by Professional Institute</p>
+                    <p class="cert-date">2025</p>
+                </div>
+
+                <div class="certificate-card">
+                    <div class="cert-icon">🎨</div>
+                    <h3>UI/UX Design Certification</h3>
+                    <p class="cert-issuer">Design Academy</p>
+                    <p class="cert-date">2024</p>
+                </div>
+
+                <div class="certificate-card">
+                    <div class="cert-icon">💻</div>
+                    <h3>Frontend Development</h3>
+                    <p class="cert-issuer">Tech Training Center</p>
+                    <p class="cert-date">2024</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
@@ -259,7 +405,7 @@
                         <a href="#" class="social-link">GitHub</a>
                         <a href="#" class="social-link">LinkedIn</a>
                         <a href="#" class="social-link">Twitter</a>
-                        <a href="#" class="social-link">Instagram</a>
+                        <a href="https://www.instagram.com/_angrnnz/" target="_blank" class="social-link">Instagram</a>
                     </div>
                 </div>
                 <form class="contact-form">
